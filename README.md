@@ -8,8 +8,7 @@ isucon3_prepare
 - virnish => virnish でやるなら nginx memcached plugin は不要？
 - redis ruby コードチートシート
 - erb => slim (はやいはずだけど、キモにはならないかな)
-- unicorn or puma or passenger どれ？
-- 例えば GC を止める http://secondlife.hatenablog.jp/entry/20111006/1317893282
+- unicorn or puma or passenger どれ？ => unicorn.conf チートシート done
 
 アイデア：
 
