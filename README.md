@@ -1,7 +1,7 @@
 isucon3_prepare
 ===============
 
-ToDo:
+欲しいチートシート:
 
 - mysql.conf (done. hirose.cnf ぱくり済み)
 - nginx.conf (keepalive off? nginx memcached plugin で動的ファイルも更新がなければ直接配信するとか)
@@ -9,6 +9,10 @@ ToDo:
 - redis ruby コードチートシート
 - erb => slim (はやいはずだけど、キモにはならないかな)
 - unicorn or puma or passenger どれ？
+
+アイデア：
+
+- mysql のデータファイルを tmpfs においたらめっちゃはやそう
 
 # 当日の行動
 
