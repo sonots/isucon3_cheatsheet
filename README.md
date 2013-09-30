@@ -4,7 +4,7 @@ isucon3_prepare
 欲しいチートシート:
 
 - mysql.conf (done. hirose.cnf ぱくり済み)
-- nginx.conf (keepalive off? nginx memcached plugin で動的ファイルも更新がなければ直接配信するとか)
+- nginx.conf (done. keepalive off as default) nginx memcached plugin => did not try. 
 - virnish => virnish でやるなら nginx memcached plugin は不要？
 - redis ruby コードチートシート
 - erb => slim (はやいはずだけど、キモにはならないかな)
