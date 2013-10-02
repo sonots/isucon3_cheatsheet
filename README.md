@@ -15,9 +15,31 @@ isucon3_prepare
 - mysql のデータファイルを tmpfs においたらめっちゃはやそう => レギュレーションの「サーバの設定およびデータ構造は任意のタイミングでのサーバ再起動に耐えること」にひっかかるのでだめっぽい T T
 - AMIが提供されるだけなので、インスタンス１つではなく、複数立ちあげてそれぞれで別作業をするのも可。ただ、他に展開するためにAMI保存しようとするとその間なにも作業できなくなるので、手で移植か？
 - アプリに newrelic か rack-mini-profiler 仕込んだほうがいいかも
+
+cf. http://blog.nomadscafe.jp/2012/11/isucon2-5.html
+
 - kazeburo さんは worker に HTML を保存させてそれを serve するようにしたらしい https://github.com/kazeburo/isucon2_hack/blob/master/perl/worker.pl
-- nginx にアクセス時に gzip 圧縮するのではなく、その HTML をあらかじめ gzip 圧縮して配信したらしい http://blog.nomadscafe.jp/2012/11/isucon2-5.html
+- nginx にアクセス時に gzip 圧縮するのではなく、その HTML をあらかじめ gzip 圧縮して配信したらしい 
 - トラッフィク多すぎたので delay を入れたとな ...
+
+cf. http://www.seeds-std.co.jp/seedsblog/163.html
+
+* memcached の中に入ってるキーを一覧するperlワンライナー
+
+```
+perl -MCache::Memcached -e '$s="localhost:11211";$m=new Cache::Memcached({servers=>[$s]});$res=$m->stats("items");$i=$res->{hosts}{$s}{items};@a=split("€n",$i);while(){if($_=~/items:([0-9]+)/){$s{$1}=$_}};foreach $key (keys %s){$cm="cachedump $key 100";$res=$m->stats($cm);print "--- €n".$cm."€n";print $res->{hosts}{$s}{$cm}}'
+```
+
+* 再起動時にキャッシュに突っ込むシェルスクリプト
+
+```
+#!/bin/sh
+
+for i in `seq 1 1 3000`
+do
+    wget http://app01/article/$i -O -
+done
+```
 
 # 当日の行動
 
