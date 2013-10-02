@@ -15,6 +15,9 @@ isucon3_prepare
 - mysql のデータファイルを tmpfs においたらめっちゃはやそう => レギュレーションの「サーバの設定およびデータ構造は任意のタイミングでのサーバ再起動に耐えること」にひっかかるのでだめっぽい T T
 - AMIが提供されるだけなので、インスタンス１つではなく、複数立ちあげてそれぞれで別作業をするのも可。ただ、他に展開するためにAMI保存しようとするとその間なにも作業できなくなるので、手で移植か？
 - アプリに newrelic か rack-mini-profiler 仕込んだほうがいいかも
+- kazeburo さんは worker に HTML を保存させてそれを serve するようにしたらしい https://github.com/kazeburo/isucon2_hack/blob/master/perl/worker.pl
+- nginx にアクセス時に gzip 圧縮するのではなく、その HTML をあらかじめ gzip 圧縮して配信したらしい http://blog.nomadscafe.jp/2012/11/isucon2-5.html
+- トラッフィク多すぎたので delay を入れたとな ...
 
 # 当日の行動
 
