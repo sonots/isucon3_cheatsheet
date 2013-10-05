@@ -3,16 +3,19 @@ isucon3_prepare
 
 欲しいチートシート:
 
-- mysql.conf (done. hirose.cnf ぱくり済み)
-- nginx.conf (done. keepalive off as default) nginx memcached plugin => did not try. 
-- virnish => virnish でやるなら nginx memcached plugin は不要？
 - redis/resque ruby コードチートシート
-- erb => slim (はやいはずだけど、キモにはならないかな)
-- unicorn or puma or passenger どれ？ => unicorn.conf チートシート done
 
 アイデア：
 
-- mysql のデータファイルを tmpfs においたらめっちゃはやそう => レギュレーションの「サーバの設定およびデータ構造は任意のタイミングでのサーバ再起動に耐えること」にひっかかるのでだめっぽい T T
+- erb => slim (そんなにキモにはならなそう)
+- varnish 使う (これは当然)
+- mysql のデータファイルを tmpfs においたらめっちゃはやそう
+
+    - レギュレーションの「サーバの設定およびデータ構造は任意のタイミングでのサーバ再起動に耐えること」にひっかかるのでだめっぽい T T
+    - シャットダウン時にディスクにおいて、起動時にディスクから tmpfs に cp するようにすればいいんじゃないのか？
+
+- 最初だけアプリに newrelic か rack-mini-profiler 仕込んだほうがわかりやすいかも
+- rubinius への置き換え => 使ったことないのでエラー出た時どうしたらいいかわからん
 - AMIが提供されるだけなので、インスタンス１つではなく、複数立ちあげてそれぞれで別作業をするのも可。ただ、他に展開するためにAMI保存しようとするとその間なにも作業できなくなるので、手で移植か？
 - アプリに newrelic か rack-mini-profiler 仕込んだほうがいいかも
 
@@ -24,13 +27,13 @@ cf. http://blog.nomadscafe.jp/2012/11/isucon2-5.html
 
 cf. http://www.seeds-std.co.jp/seedsblog/163.html
 
-* memcached の中に入ってるキーを一覧するperlワンライナー
+memcached の中に入ってるキーを一覧するperlワンライナー
 
 ```
 perl -MCache::Memcached -e '$s="localhost:11211";$m=new Cache::Memcached({servers=>[$s]});$res=$m->stats("items");$i=$res->{hosts}{$s}{items};@a=split("€n",$i);while(){if($_=~/items:([0-9]+)/){$s{$1}=$_}};foreach $key (keys %s){$cm="cachedump $key 100";$res=$m->stats($cm);print "--- €n".$cm."€n";print $res->{hosts}{$s}{$cm}}'
 ```
 
-* 再起動時にキャッシュに突っ込むシェルスクリプト
+再起動時にキャッシュに突っ込むシェルスクリプト
 
 ```
 #!/bin/sh
