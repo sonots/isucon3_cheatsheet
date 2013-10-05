@@ -53,6 +53,10 @@ rsync -Irp --exclude ".git" --progress . $HOST:isucon/webapp/ruby/
 ssh -t $HOST sudo /etc/init.d/supervisord restart
 ```
 
+# ISUCON3 レギュレーションと予選当時の流れ
+
+- http://isucon.net/archives/cat_1024990.html
+- https://gist.github.com/941/191180fd8e33aae121cb
 
 # 当日の行動
 
