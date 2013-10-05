@@ -6,7 +6,7 @@ isucon3_prepare
 - mysql.conf (done. hirose.cnf ぱくり済み)
 - nginx.conf (done. keepalive off as default) nginx memcached plugin => did not try. 
 - virnish => virnish でやるなら nginx memcached plugin は不要？
-- redis ruby コードチートシート
+- redis/resque ruby コードチートシート
 - erb => slim (はやいはずだけど、キモにはならないかな)
 - unicorn or puma or passenger どれ？ => unicorn.conf チートシート done
 
