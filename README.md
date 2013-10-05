@@ -41,6 +41,15 @@ do
 done
 ```
 
+デプロイ. てっとりはやく rsync でいいかもね
+
+```
+#!/bin/sh
+rsync -Irp --exclude ".git" --progress . $HOST:isucon/webapp/ruby/
+ssh -t $HOST sudo /etc/init.d/supervisord restart
+```
+
+
 # 当日の行動
 
 - 予選 10月5日(土) 11:00 - 19:00 => 10月6日(日) 11:00 - 19:00 に変更しました
