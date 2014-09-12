@@ -1,0 +1,189 @@
+## MySQL5.6インストール
+
+１. yum repository の追加
+
+```
+sudo yum install http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm
+```
+
+
+２、MySQL5.6 をインストール
+
+```
+sudo yum install mysql mysql-devel mysql-server mysql-utilities
+```
+
+下の /usr/my.cnf コピって起動.
+
+## MySQL5.6へのアップグレード
+
+cf. http://www.softel.co.jp/blogs/tech/archives/2288
+
+１、ダンプを作成（念のため）
+
+```
+sudo mysqldump  -u root -p --all-database > /tmp/all.dump
+```
+２、my.cnfをバックアップ（念のため）
+
+```
+sudo cp /etc/my.cnf /etc/my.cnf.backup
+```
+
+３、MySQLサーバーを停止
+
+```
+sudo /etc/init.d/mysql stop
+```
+
+４、MySQL5.5（古い方）をアンインストール
+
+```
+sudo yum remove MySQL-server-community
+```
+
+５、MySQL5.6（新しいの）をインストール
+
+```
+sudo yum upgrade mysql mysql-devel mysql-server mysql-utilities
+```
+
+５．５、ログファイルを綺麗にする(サイズ変えるので)
+
+```
+sudo rm -f /var/lib/mysql/ib_logfile[01]
+```
+
+６、mysql_upgrade を実行する
+
+mysql_upgradeはテーブルをチェックして、必要なら修復してくれる。ユーザー、パスワードが設定してあったら、引数につける。
+
+```
+sudo /etc/init.d/mysql start sudo mysql_upgrade -u root -p
+```
+
+７、下の /etc/my.cnf をコピー
+
+８、restart
+
+APPENDIX、ruby の mysql2 の再ビルドが必要. gem uninstall mysql2 => bundle install
+
+## ■ /usr/my.cnf
+
+一部解説
+cf. http://yakst.com/ja/posts/65
+
+```
+[mysqld]
+datadir=/var/lib/mysql
+tmpdir=/var/tmp
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+ 
+slow_query_log      = 1
+slow_query_log_file = /var/lib/mysql/slow.log
+long_query_time     = 0.1
+log-queries-not-using-indexes # sudo mysqldumpslow -s c /var/lib/mysql/slow.log
+ 
+max_connections=1024
+thread_cache       = 600
+thread_concurrency = 8
+table_cache        = 8192
+back_log           = 10240
+ 
+query_cache_size    =    0
+query_cache_type    =    0
+ 
+# global buffer
+key_buffer_size                 = 32M
+innodb_buffer_pool_size         = 10G # メモリ全体の75%ほど
+innodb_log_buffer_size          = 8M
+innodb_additional_mem_pool_size = 10M
+ 
+# thread buffer
+sort_buffer_size        = 1M
+myisam_sort_buffer_size = 64K
+read_buffer_size        = 1M
+ 
+# innodb
+innodb_log_files_in_group       = 3
+innodb_log_file_size            = 512M # ディスク食うので注意
+innodb_flush_log_at_trx_commit  = 0 # Don't use 0 except ISUCON. cf. http://www.mysqlpracticewiki.com/index.php/--innodb-flush-log-at-trx-commit
+innodb_lock_wait_timeout        = 5
+innodb_flush_method             = O_DIRECT
+innodb_adaptive_hash_index      = 0
+innodb_thread_concurrency       = 30
+innodb_read_io_threads          = 16
+innodb_write_io_threads         = 16
+innodb_io_capacity              = 200
+innodb_stats_on_metadata        = Off
+
+# innodb plugin for mysql >= 5.1.38, comment out for mysql >= 5.5 because it is default. 
+# ignore-builtin-innodb
+# plugin-load = innodb=ha_innodb_plugin.so;innodb_trx=ha_innodb_plugin.so;innodb_locks=ha_innodb_plugin.so;innodb_lock_waits=ha_innodb_plugin.so;innodb_cmp=ha_innodb_plugin.so;innodb_cmp_reset=ha_innodb_plugin.so;innodb_cmpmem=ha_innodb_plugin.so;innodb_cmpmem_reset=ha_innodb_plugin.so
+ 
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+```
+
+```
+mysql> show plugins
+```
+InnoDB が出てこなかったら何かおかしい. たぶんコレ cf. http://blog.flatlabs.net/20100727_212649/
+
+```
+$ tail -100 /var/log/mysqld.log
+InnoDB: Error: log file ./ib_logfile0 is of different size 0 5242880 bytesInnoDB: than specified in the .cnf file 0 1073741824 bytes!
+```
+
+ログファイルを綺麗にしないとダメらしい. stop して rm する
+```
+rm /var/lib/mysql/ib_logfile*
+```
+
+## ■ 便利コマンド
+
+テーブル状態 innodb か、index 貼ってあるか、など
+
+```
+mysql> show table status;
+```
+
+mysql の内部プロセス状態。どの db へのアクセスがCPUをくってるかなど
+
+```
+mysql> show processlist;
+```
+
+## ケースバイケース
+
+### Query Cache
+Ref: 過去問 http://d.hatena.ne.jp/sfujiwara/20110827/1314460582
+
+```
+query_cache_size    =    16M   # default: 10MB but cache OFF
+query_cache_type    =    1     # 1 = ON
+```
+
+確認
+```
+mysql> SHOW VARIABLES LIKE 'query_cache%';
+mysql> SHOW STATUS LIKE 'Qcache%';
+```
+
+更新系クエリ多い場合はOFFの方がいいけど、SELECT多い場合はキャッシュ有効にするとスコアあがるかも
+
+### 最終判定前にキャッシュ温める
+OS再起動したのちスコア測定するので、mysql起動後にキャッシュ温める戦略
+Ref: http://www.songmu.jp/riji/archives/2011/08/isucon.html
+Ref: http://d.hatena.ne.jp/hirose31/20100728/1280313859  # こっちのほうが分かりやすい
+
+```
+CREATE TABLE _preload LIKE huge_table;
+ALTER TABLE  _preload ENGINE = BLACKHOLE;
+INSERT INTO  _preload SELECT * FROM huge_table;
+DROP TABLE   _preload;
+```
