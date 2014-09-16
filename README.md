@@ -80,6 +80,7 @@ ssh -t $HOST sudo /etc/init.d/supervisord restart
     - query ごとのメトリクスを出しておく(long_query_time = 0 で slow.log 出しておく). mysqlslowdump で解析してとっておく。見ておく
     - lsof してアプリがどこにアクセスしているのかとっておく。見ておく
     - vmstat, iostat の結果をとっておく。見ておく
+    - テーブルのスキーマ、インデックス情報などをみておく
 
   - アプリの仕様、画面とコードの対応箇所(構造)を把握しておく
   - そして、コードを読んで改善できところをチェックしていく(局所的)
