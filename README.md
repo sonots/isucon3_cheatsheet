@@ -23,9 +23,9 @@ isucon3_prepare
 - メトリクスを取る仕込みを入れて time コマンドかまして１回ベンチ通す(ベンチ１回に何秒かかるか見る)
 
  - mysql で log-queries-not-using-indexes を出すようにしておく
- - http metrics を仕込む (nginx のログで見る手もある)
- - mysql metrics を仕込む (long_query_time = 0 で slow.log 出しておき、mysqlslowdump という手もある)
- - template_metrics を仕込む
+ - HTTPリクエストのメトリクスをとえるプロファイラを仕込む (nginx のログで見る手もある)
+ - SQLクエリのメトリクスをとれるプロファイラを仕込む (long_query_time = 0 で slow.log 出しておき、mysqlslowdump という手もある)
+ - テンプレートエンジンのメトリクスをとれるプロファイラを仕込む
  - lsof してアプリがどこにアクセスしているのかとっておく
  - vmstat の結果をとっておく
  - iostat の結果をとっておく
