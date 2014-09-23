@@ -49,6 +49,7 @@ isucon3_prepare
 - LIMIT ? OFFSET ? は IN に置き換える
 - N+1 クエリはまとめて取得できるように書き換える
   - 典型例: 二つのテーブルを合体するためのN+1クエリ => Joinに直す
+- なぜか index が利かなくて実行計画がおかしい場合は、select ... from table force index(index_name); とする。
 
 
 アイデア：
