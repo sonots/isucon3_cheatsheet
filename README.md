@@ -45,7 +45,7 @@ isucon3_prepare
 
 - http://www.slideshare.net/kazeburo/isucon-summerclass2014action2final
 - まずは検索カラムに index を貼る
-- SELECT * しないで必要なカラムに絞る。少数ならば index 貼ってしまって、covering index してしまう
+- SELECT のカラムを * から必要なカラムに絞る。少数ならば index 貼ってしまって、covering index にしてしまう
 - LIMIT ? OFFSET ? は IN に置き換える
 - N+1 クエリはまとめて取得できるように書き換える
   - 典型例: 二つのテーブルを合体するためのN+1クエリ => Joinに直す
