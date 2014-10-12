@@ -32,7 +32,7 @@ isucon3_prepare
  - テーブルのスキーマ、インデックス情報をとっておく (show create table memos, explain ....)
  - https://gist.github.com/sonots/0a6211ea5bb5fc1f795c
 
-- 追加: ベンチマークツール/アプリの特性をみる
+- 追加: ベンチマークツール/アプリ/データの特性をみる
 
   - どのデータが増えてどのデータは固定なのか. 増えるとして何 rows, bytes ぐらい増えるのか
   - 初期データは何 rows, bytes ぐらいなのか
