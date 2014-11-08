@@ -55,6 +55,7 @@ isucon3_prepare
   - strings benchmarker、tcpdump
   - 遅い所はあえて fail したら得点あがるかもとか
   - このヘッダを benchmarker は解釈するかもとか
+  - benchmarker 内部で時間かかってそうだから、そこをあえて fail させて飛ばせないかとか
 
 # 役に立つかもしれない情報
 
